@@ -114,6 +114,43 @@ module Glass
       google_client.execute update_content
     end
 
+    ##
+    # Gets a contact.
+    #
+    # @param [String] contact_id
+    #   The identifier of the contact to retrieve.
+    #
+    # @return [Google::APIClient::Schema::Mirror::V1::Contact]
+    #   The Contact that was retrieved.
+    def get_contact(contact_id)
+      google_client.execute(
+        api_method: mirror_api.contacts.get,
+        parameters: { id: contact_id }
+      ).data
+    end
+
+    ##
+    # Inserts a new contact.
+    #
+    # @param [Hash | Google::APIClient::Schema::Mirror::V1::Contact] contact
+    #   The contact to insert, passed either as a hash describing its parameters
+    #   or an actual Contact object created elsewhere.
+    #
+    # @return [Google::APIClient::Schema::Mirror::V1::Contact]
+    #   The Contact that was inserted.
+    def insert_contact(contact)
+      method = mirror_api.contacts.insert
+
+      if contact.kind_of?(Hash)
+        contact = method.request_schema.new(contact)
+      end
+
+      google_client.execute(
+          api_method: method,
+          body_object: contact
+      ).data
+    end
+
     ## deprecated: please use cached_list instead
     def timeline_list(opts={as_hash: true})
       puts "DEPRECATION WARNING: timeline_list is now deprecated, please use cached_list instead"
@@ -214,7 +251,7 @@ module Glass
     def initialize_google_client
       application_name = ::Glass.application_name
       application_version = ::Glass.application_version
-      self.google_client = ::Google::APIClient.new(application_name: application_name, 
+      self.google_client = ::Google::APIClient.new(application_name: application_name,
                                                    application_version: application_version)
       self.mirror_api = google_client.discovered_api("mirror", "v1")
     end
