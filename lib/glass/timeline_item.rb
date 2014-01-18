@@ -152,7 +152,7 @@ module Glass
     ## convert the menu items into hash form
     ## not a part of the public api.
     def self.menu_items_hash
-      {menuItems: self.menu_items.map(&:serialize) }
+      menu_items.present? ? {menuItems: self.menu_items.map(&:serialize) } : {}
     end
 
     ## convert class to instance method.
