@@ -19,3 +19,8 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+
+# RubyMine
+/.idea/dataSources.ids
+/.idea/workspace.xml
+/.idea/tasks.xml
